@@ -1,5 +1,7 @@
 package com.sds.customer.config;
 
+import com.sds.customer.command.CreateCustomerCommand;
+import com.sds.customer.handler.CreateCustomerCommandHandler;
 import org.axonframework.commandhandling.SimpleCommandBus;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
