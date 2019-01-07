@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 public class CreateCustomerCommandHandler {
 
     @CommandHandler
-    public void handle(CreateCustomerCommand createCustomerCommand) {
+    public void create(CreateCustomerCommand createCustomerCommand) {
+        System.out.println("Create Customer!");
         System.out.println("Name : " + createCustomerCommand.getName() + " Email : " + createCustomerCommand.getEmail());
     }
 }

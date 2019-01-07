@@ -6,7 +6,8 @@ import lombok.*;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CustomerDTO {
+public class UpdateCustomerDTO {
+    private String customerId;
     private String name;
     private String email;
 }

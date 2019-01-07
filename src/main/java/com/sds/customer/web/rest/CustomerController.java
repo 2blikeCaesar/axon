@@ -1,7 +1,9 @@
 package com.sds.customer.web.rest;
 
 import com.sds.customer.command.CreateCustomerCommand;
-import com.sds.customer.dto.CustomerDTO;
+import com.sds.customer.command.UpdateCustomerCommand;
+import com.sds.customer.dto.CreateCustomerDTO;
+import com.sds.customer.dto.UpdateCustomerDTO;
 import org.axonframework.commandhandling.gateway.CommandGateway;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -19,9 +21,15 @@ public class CustomerController {
     @Autowired
     private CommandGateway commandGateway;
 
-    @PostMapping
-    public void createCustomer(@RequestBody CustomerDTO customerDTO) {
-        CreateCustomerCommand createCustomerCommand = new CreateCustomerCommand(customerDTO.getName(), customerDTO.getEmail());
+    @PostMapping("/create")
+    public void createCustomer(@RequestBody CreateCustomerDTO createCustomerDTO) {
+        CreateCustomerCommand createCustomerCommand = new CreateCustomerCommand(createCustomerDTO.getName(), createCustomerDTO.getEmail());
         commandGateway.send(createCustomerCommand);
+    }
+
+    @PostMapping("/update")
+    public void updateCustomer(@RequestBody UpdateCustomerDTO updateCustomerDTO) {
+        UpdateCustomerCommand updateCustomerCommand = new UpdateCustomerCommand(updateCustomerDTO.getCustomerId(), updateCustomerDTO.getName(), updateCustomerDTO.getEmail());
+        commandGateway.send(updateCustomerCommand);
     }
 }
