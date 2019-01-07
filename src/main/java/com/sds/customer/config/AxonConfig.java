@@ -13,7 +13,6 @@ public class AxonConfig {
     @Bean
     public CommandGateway defaultCommandGateway() {
         return DefaultCommandGateway.builder().commandBus(simpleCommandBus()).build();
-//        return new DefaultCommandGateway(DefaultCommandGateway.builder().commandBus(simpleCommandBus()));
     }
 
     @Bean
