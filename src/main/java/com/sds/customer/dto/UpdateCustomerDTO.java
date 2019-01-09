@@ -7,7 +7,7 @@ import lombok.*;
 @Getter
 @Setter
 public class UpdateCustomerDTO {
-    private String customerId;
+    private String customerAggregateId;
     private String name;
     private String email;
 }

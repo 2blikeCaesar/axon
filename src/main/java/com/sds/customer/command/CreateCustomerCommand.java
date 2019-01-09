@@ -1,14 +1,13 @@
 package com.sds.customer.command;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-@AllArgsConstructor
-@Getter
-@Setter
+@Value
 public class CreateCustomerCommand {
+    @TargetAggregateIdentifier
+    private String customerAggregateId;
     private String name;
     private String email;
 }

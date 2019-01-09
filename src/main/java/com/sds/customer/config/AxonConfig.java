@@ -1,32 +1,38 @@
 package com.sds.customer.config;
 
-import com.sds.customer.command.CreateCustomerCommand;
-import com.sds.customer.handler.CreateCustomerCommandHandler;
-import org.axonframework.commandhandling.SimpleCommandBus;
-import org.axonframework.commandhandling.gateway.CommandGateway;
-import org.axonframework.commandhandling.gateway.DefaultCommandGateway;
-import org.axonframework.spring.config.annotation.AnnotationCommandHandlerBeanPostProcessor;
+import org.axonframework.common.transaction.TransactionManager;
+import org.axonframework.eventsourcing.EventCountSnapshotTriggerDefinition;
+import org.axonframework.eventsourcing.SnapshotTriggerDefinition;
+import org.axonframework.eventsourcing.eventstore.EventStore;
+import org.axonframework.messaging.annotation.ParameterResolverFactory;
+import org.axonframework.spring.eventsourcing.SpringAggregateSnapshotter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 @Configuration
 public class AxonConfig {
 
     @Bean
-    public CommandGateway defaultCommandGateway() {
-        return DefaultCommandGateway.builder().commandBus(simpleCommandBus()).build();
+    public SpringAggregateSnapshotter snapshotter(ParameterResolverFactory parameterResolverFactory,
+                                                  EventStore eventStore,
+                                                  TransactionManager transactionManager) {
+        // https://docs.axoniq.io/reference-guide/v/3.3/part-iii-infrastructure-components/repository-and-event-store#snapshotting
+        // (...) By default, snapshots are created in the thread that calls the scheduleSnapshot() method, which is generally not recommended for production (...)
+        Executor executor = Executors.newSingleThreadExecutor();
+        return SpringAggregateSnapshotter.builder()
+                .eventStore(eventStore)
+                .parameterResolverFactory(parameterResolverFactory)
+                .transactionManager(transactionManager)
+                .build();
+//        return new SpringAggregateSnapshotter(eventStore, parameterResolverFactory, executor, transactionManager);
     }
+
 
     @Bean
-    public SimpleCommandBus simpleCommandBus() {
-        SimpleCommandBus simpleCommandBus = new SimpleCommandBus.Builder().build();
-        return simpleCommandBus;
+    public SnapshotTriggerDefinition eventCountSnapshotTriggerDefinition(SpringAggregateSnapshotter snapshotter) {
+        return new EventCountSnapshotTriggerDefinition(snapshotter, 3);
     }
-
-    @Bean
-    public AnnotationCommandHandlerBeanPostProcessor annotationCommandHandlerBeanPostProcessor() {
-        AnnotationCommandHandlerBeanPostProcessor annotationCommandHandlerBeanPostProcessor = new AnnotationCommandHandlerBeanPostProcessor();
-        return annotationCommandHandlerBeanPostProcessor;
-    }
-
 }

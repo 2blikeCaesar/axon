@@ -4,12 +4,13 @@ package com.sds.customer.command;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.Value;
+import org.axonframework.modelling.command.TargetAggregateIdentifier;
 
-@AllArgsConstructor
-@Getter
-@Setter
+@Value
 public class UpdateCustomerCommand {
-    private String customerId;
+    @TargetAggregateIdentifier
+    private String customerAggregateId;
     private String name;
     private String email;
 }
